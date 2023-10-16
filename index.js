@@ -1,15 +1,7 @@
-const bird = document.querySelector(".bird")
-const gameContainer = document.querySelector(".game-container")
-const ground = document.querySelector(".ground")
-const sky = document.querySelector(".sky")
+import {bird,gameContainer,gravity,birdJumpHeight,gameContainerHeight,floorHeight,skyHeight,birdWidth,gameContainerWidth} from "./constants.js"
 
-const gravity = 5
-const birdJumpHeight = 50
-const gameContainerHeight = parseInt(getComputedStyle(gameContainer)?.height,10)
-const floorHeight = parseInt(getComputedStyle(ground)?.height,10)
-const skyHeight = parseInt(getComputedStyle(sky)?.height,10)
-const birdWidth = parseInt(getComputedStyle(bird)?.width,10)
-
+let gameIntervalId
+let generatePipesIntervalId
 let isGameOver = false
 
 let currentBirdPosition = parseInt(getComputedStyle(bird)?.top,10)
@@ -28,30 +20,28 @@ function startGame(){
 
 function assignHeightToPipe(pipes){
     pipes.forEach(pipe => {
-        const height = Math.floor(Math.random() * (51) ) + 100;
+        const height = Math.floor(Math.random() * 11) * 5 + 100;
         pipe.style.height = height + "px"
     })
 }
 
-function isPipeInCollisionRange(pipe,currentPipePosition){
-    const gameContainerWidth = parseInt(getComputedStyle(gameContainer)?.width,10)
-    const pipeWidth = parseInt(getComputedStyle(pipe)?.width,10)
-    return (currentPipePosition <= gameContainerWidth/2) && (currentPipePosition >= (gameContainerWidth/2 - pipeWidth))
+function isPipeInCollisionRange(_,currentPipePosition){
+    if(currentPipePosition === gameContainerWidth/2 + birdWidth/2) 
+        console.log("Debug")
+    return (currentPipePosition <= gameContainerWidth/2 + birdWidth/2) && (currentPipePosition >= (gameContainerWidth/2 - birdWidth/2))
 }
 
 function isBirdInCollisionRange(topPipe,bottomPipe){
-    const curentBirdBottomPosition = gameContainerHeight - currentBirdPosition - floorHeight //Subtracting floor height as well because bird is absolute to the container
+    const curentBirdBottomPosition = gameContainerHeight - currentBirdPosition - floorHeight - birdWidth/2 //Subtracting floor height as well because bird is absolute to the container
     const topPipeHeight = parseInt(getComputedStyle(topPipe)?.height,10)
     const bottomPipeHeight = parseInt(getComputedStyle(bottomPipe)?.height,10)
+    console.log(topPipeHeight,currentBirdPosition)
     return currentBirdPosition <= topPipeHeight || curentBirdBottomPosition <= bottomPipeHeight
 }
 
 function birdTouchedGround(){
     return currentBirdPosition >= skyHeight - birdWidth
 }
-
-const movingPipesIntervals = []
-
 function generatePipes(){
     const topPipe = document.createElement("div")
     const bottomPipe = document.createElement("div")
@@ -72,7 +62,6 @@ function generatePipes(){
         }
     }
     let timerId = setInterval(movePipes,100)
-    movingPipesIntervals.push(timerId)
 }
 
 function endGame(){
