@@ -1,0 +1,52 @@
+*{
+    padding : 0;
+    margin : 0;
+    box-sizing: border-box;
+}
+
+:root{
+    --container-width : 400px;
+    --container-height : 500px;
+    --sky-height : 400px;
+    --bird-dimension : 50px
+}
+
+.game-container{
+    height : var(--container-height);
+    width : var(--container-width);
+    position: relative;
+}
+
+.sky{
+    height : var(--sky-height);
+    background-color: blue;
+}
+
+.ground{
+    height:calc(var(--container-height) - var(--sky-height));
+    background-color: yellow;
+}
+
+.bird{
+    position: absolute;
+    width : var(--bird-dimension);
+    height: var(--bird-dimension);
+    left : calc(var(--container-width)/2 - 25px);
+    top : calc(var(--sky-height)/2 - 25px);
+    background-color: red;
+}
+
+.pipe{
+    position: absolute;
+    width : 50px;
+    left : var(--container-width) ;
+    background-color: green;
+}
+
+.top-pipe{
+    top : 0;
+}
+
+.bottom-pipe{
+    bottom: 100px;
+}
