@@ -65,3 +65,12 @@
     position: relative;
     z-index: 1;
 }
+
+.game-over{
+    position: absolute;
+    top : 50%;
+    left : 50%;
+    transform: translateX(-50%) translateY(-50%);
+    display : none;
+    color : white;
+}

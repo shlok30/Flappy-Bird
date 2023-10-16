@@ -1,4 +1,4 @@
-import {bird,gameContainer,gravity,birdJumpHeight,gameContainerHeight,floorHeight,skyHeight,birdWidth,gameContainerWidth,score} from "./constants.js"
+import {bird,gameContainer,gravity,birdJumpHeight,gameContainerHeight,floorHeight,skyHeight,birdWidth,gameContainerWidth,score,gameOverMessage} from "./constants.js"
 
 let gameIntervalId
 let generatePipesIntervalId
@@ -76,6 +76,7 @@ function endGame(){
     clearInterval(gameIntervalId)
     clearInterval(generatePipesIntervalId)
     document.removeEventListener("keyup",makeBirdJump)
+    gameOverMessage.style.display = "block"
 }
 
 function mainGame(){
