@@ -3,12 +3,16 @@ const gameContainer = document.querySelector(".game-container")
 
 const gravity = 5
 
+let isGameOver = false
+
 let currentBirdPosition = parseInt(getComputedStyle(bird)?.top,10)
 
-document.addEventListener("keyup",() => {
+function makeBirdJump(){
     currentBirdPosition -= 50
     bird.style.top = currentBirdPosition + "px"
-})
+}
+
+document.addEventListener("keyup",makeBirdJump)
 
 function startGame(){
     currentBirdPosition += gravity
@@ -43,6 +47,7 @@ function generatePipes(){
     //Lets remove those pipes which have left the screen
     //Now lets give these pipes random heights
     //Now lets detect collision
+    //If gameOver is true then clear the generatePipes interval
     const topPipe = document.createElement("div")
     const bottomPipe = document.createElement("div")
     topPipe.classList.add("pipe","top-pipe")
@@ -50,10 +55,12 @@ function generatePipes(){
     assignHeightToPipe([topPipe,bottomPipe])
     gameContainer.append(topPipe,bottomPipe)
     function movePipes(){ // Using closure of topPipe and bottomPipe
+        //If gameOver is true then clear its interval
+        if(isGameOver) clearInterval(timerId)
         const currentPipePosition = parseInt(getComputedStyle(topPipe)?.left,10)
         topPipe.style.left = (currentPipePosition - 10) + "px"
         bottomPipe.style.left = (currentPipePosition - 10) + "px"
-        if(isPipeInCollisionRange(topPipe,parseInt(topPipe.style.left,10)) && isBirdInCollisionRange(topPipe,bottomPipe)) endGame([gameIntervalId,generatePipesIntervalId,...movingPipesIntervals])
+        if(isPipeInCollisionRange(topPipe,parseInt(topPipe.style.left,10)) && isBirdInCollisionRange(topPipe,bottomPipe)) endGame()
         if(topPipe.style.left === "-30px"){
             gameContainer.removeChild(topPipe)
             gameContainer.removeChild(bottomPipe)
@@ -64,12 +71,13 @@ function generatePipes(){
     movingPipesIntervals.push(timerId)
 }
 
-function endGame(intervalIds){
-    intervalIds.forEach(id => clearInterval(id))
+function endGame(){
+    isGameOver =  true
+    clearInterval(gameIntervalId)
+    clearInterval(generatePipesIntervalId)
+    document.removeEventListener("keyup",makeBirdJump)
 }
 
-
-// generatePipes()
 gameIntervalId = setInterval(startGame,50)
 
 generatePipesIntervalId = setInterval(generatePipes,1500)
