@@ -19,12 +19,16 @@
 
 .sky{
     height : var(--sky-height);
-    background-color: blue;
+    background-image: url('fb-game-background.png');
+    background-size: 100%;
+    background-repeat: no-repeat;
 }
 
 .ground{
     height:calc(var(--container-height) - var(--sky-height));
-    background-color: yellow;
+    background-image: url('bottom-background.png');
+    background-size: 100%;
+    background-repeat: no-repeat;
 }
 
 .bird{
@@ -33,20 +37,31 @@
     height: var(--bird-dimension);
     left : calc(var(--container-width)/2 - 25px);
     top : calc(var(--sky-height)/2 - 25px);
-    background-color: red;
+    background-image: url('flappy-bird.png');
+    background-size: 100%;
+    background-repeat: no-repeat;
 }
 
 .pipe{
     position: absolute;
     width : 50px;
     left : var(--container-width) ;
-    background-color: green;
+    background-image: url('flappybird-pipe.png');
+    background-size: 100%;
+    background-repeat: no-repeat;
 }
 
 .top-pipe{
     top : 0;
+    transform: rotate(180deg);
 }
 
 .bottom-pipe{
     bottom: 100px;
+}
+
+.scoreboard{
+    padding : 0.5rem;
+    position: relative;
+    z-index: 1;
 }

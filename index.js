@@ -1,4 +1,4 @@
-import {bird,gameContainer,gravity,birdJumpHeight,gameContainerHeight,floorHeight,skyHeight,birdWidth,gameContainerWidth} from "./constants.js"
+import {bird,gameContainer,gravity,birdJumpHeight,gameContainerHeight,floorHeight,skyHeight,birdWidth,gameContainerWidth,score} from "./constants.js"
 
 let gameIntervalId
 let generatePipesIntervalId
@@ -8,6 +8,7 @@ let currentBirdPosition = parseInt(getComputedStyle(bird)?.top,10)
 
 function makeBirdJump(){
     currentBirdPosition -= birdJumpHeight
+    console.log("From Jump",currentBirdPosition)
     bird.style.top = currentBirdPosition + "px"
 }
 
@@ -25,18 +26,19 @@ function assignHeightToPipe(pipes){
     })
 }
 
-function isPipeInCollisionRange(_,currentPipePosition){
+function isPipeInCollisionRange(topPipe,currentPipePosition){
     if(currentPipePosition === gameContainerWidth/2 + birdWidth/2) 
         console.log("Debug")
-    return (currentPipePosition <= gameContainerWidth/2 + birdWidth/2) && (currentPipePosition >= (gameContainerWidth/2 - birdWidth/2))
+    return (currentPipePosition <= gameContainerWidth/2 + birdWidth/2) && (currentPipePosition >= (gameContainerWidth/2 - birdWidth/2 - parseInt(getComputedStyle(topPipe)?.width,10)))
 }
 
 function isBirdInCollisionRange(topPipe,bottomPipe){
+    currentBirdPosition = parseInt(getComputedStyle(bird)?.top,10)
     const curentBirdBottomPosition = gameContainerHeight - currentBirdPosition - floorHeight - birdWidth/2 //Subtracting floor height as well because bird is absolute to the container
     const topPipeHeight = parseInt(getComputedStyle(topPipe)?.height,10)
     const bottomPipeHeight = parseInt(getComputedStyle(bottomPipe)?.height,10)
     console.log(topPipeHeight,currentBirdPosition)
-    return currentBirdPosition <= topPipeHeight || curentBirdBottomPosition <= bottomPipeHeight
+    return currentBirdPosition <= topPipeHeight + 5 || curentBirdBottomPosition <= bottomPipeHeight + 5
 }
 
 function birdTouchedGround(){
@@ -49,19 +51,24 @@ function generatePipes(){
     bottomPipe.classList.add("pipe","bottom-pipe")
     assignHeightToPipe([topPipe,bottomPipe])
     gameContainer.append(topPipe,bottomPipe)
+    let successfullyPassedObstacle = false
     function movePipes(){
         if(isGameOver) clearInterval(timerId)
         const currentPipePosition = parseInt(getComputedStyle(topPipe)?.left,10)
         topPipe.style.left = (currentPipePosition - 10) + "px"
         bottomPipe.style.left = (currentPipePosition - 10) + "px"
         if(isPipeInCollisionRange(topPipe,parseInt(topPipe.style.left,10)) && isBirdInCollisionRange(topPipe,bottomPipe) || birdTouchedGround()) endGame()
+        if(!successfullyPassedObstacle && parseInt(topPipe.style.left,10) < gameContainerWidth/2 - birdWidth/2 - parseInt(getComputedStyle(topPipe)?.width,10) ){
+            successfullyPassedObstacle = true
+            score.textContent = parseInt(score.textContent,10) + 1
+        }
         if(topPipe.style.left === "-30px"){
             gameContainer.removeChild(topPipe)
             gameContainer.removeChild(bottomPipe)
             clearInterval(timerId)
         }
     }
-    let timerId = setInterval(movePipes,100)
+    let timerId = setInterval(movePipes,50)
 }
 
 function endGame(){
