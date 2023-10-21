@@ -40,6 +40,7 @@
     background-image: url('flappy-bird.png');
     background-size: 100%;
     background-repeat: no-repeat;
+    background-position: center;
 }
 
 .pipe{

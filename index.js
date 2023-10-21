@@ -34,14 +34,15 @@ function isPipeInCollisionRange(topPipe,currentPipePosition){
 
 function isBirdInCollisionRange(topPipe,bottomPipe){
     currentBirdPosition = parseInt(getComputedStyle(bird)?.top,10)
-    const curentBirdBottomPosition = gameContainerHeight - currentBirdPosition - floorHeight - birdWidth/2 //Subtracting floor height as well because bird is absolute to the container
+    const curentBirdBottomPosition = gameContainerHeight - currentBirdPosition - floorHeight - birdWidth //Subtracting floor height as well because bird is absolute to the container, also subtracting birdHeight(same as width) since we need position wrt bottom edge of bird
     const topPipeHeight = parseInt(getComputedStyle(topPipe)?.height,10)
     const bottomPipeHeight = parseInt(getComputedStyle(bottomPipe)?.height,10)
     console.log(topPipeHeight,currentBirdPosition)
-    return currentBirdPosition <= topPipeHeight + 5 || curentBirdBottomPosition <= bottomPipeHeight + 5
+    return currentBirdPosition <= topPipeHeight || curentBirdBottomPosition <= bottomPipeHeight
 }
 
 function birdTouchedGround(){
+    currentBirdPosition = parseInt(getComputedStyle(bird)?.top,10)
     return currentBirdPosition >= skyHeight - birdWidth
 }
 function generatePipes(){
